@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func Inıt(url string) *gorm.DB {
+func Init(url string) *gorm.DB {
 	db, err := gorm.Open(postgres.Open(url), &gorm.Config{})
 
 	if err != nil {
