@@ -14,6 +14,11 @@ func (h *Handler) Login(ctx *gin.Context) {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
-	var user models.User
-	user.PairBody(&body) // wrong
+
+	var user = models.User{}
+	user.PairBody(&body)
+	if result := h.DB.First(&user, "email=?", user.email); result != nil {
+		ctx.AbortWithError(http.StatusNotFound, result.Error)
+		return
+	}
 }
