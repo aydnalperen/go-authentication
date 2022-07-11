@@ -2,6 +2,10 @@ package models
 
 import "gorm.io/gorm"
 
+type User_login struct {
+	email    string
+	password string
+}
 type User_no_gorm struct {
 	email        string
 	username     string
