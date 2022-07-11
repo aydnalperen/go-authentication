@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"app/pkg/common/hash"
 	"app/pkg/common/models"
 	"net/http"
 
@@ -14,9 +15,15 @@ func (h *Handler) Registeration(ctx *gin.Context) {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
-	var user models.User
-	user.PairBody(&body)
 
+	body.passwordhash = hash.HashPassword(body.passwordhash)
+	var user models.User
+
+	user.PairBody(&body)
+	if control := h.DB.First(&user, "email=?", user.email); control.Error != nil {
+		ctx.AbortWithError(http.StatusConflict, control.Error)
+		return
+	}
 	if result := h.DB.Create(&user); result != nil {
 		ctx.AbortWithError(http.StatusNotFound, result.Error)
 		return
